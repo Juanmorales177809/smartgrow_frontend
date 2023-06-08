@@ -15,6 +15,12 @@ export const Hidroponico = () => {
         socket.on('disconnect', () => {
           setIsConnected(socket.connected);
         });
+
+        socket.on('join', (data) => {
+            console.log(data);
+        });
+
+
       }, []);
     return (<>
         <h2>status: {isConnected ? 'connected' : 'disconnected'}</h2>
