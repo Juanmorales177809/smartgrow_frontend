@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 function HidroponicoComponent() {
   const socket = io('http://localhost:8000', {
 });
+  const [sensorTemperaturaData, setSensorTemperaturaData] = useState();
   const [sensorECData, setSensorECData] = useState();
   const [sensorPHData, setSensorPHData] = useState();
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -16,11 +17,12 @@ function HidroponicoComponent() {
     });
     socket.on('message', (data) => {
       console.log(data);
-      if (data.sensor === 'sensor1'){
+      if (data.sensor === 'hidroponico'){
+        setSensorTemperaturaData(data.temperatura);
+        setSensorECData(data.ec);
+        setSensorPHData(data.ph);
         setSensorECData(data.value);
-      } else if (data.sensor === 'sensor2'){
-        setSensorPHData(data.value);
-      }
+      } 
     });
   }, []);
 
@@ -30,7 +32,7 @@ function HidroponicoComponent() {
       <p>status: {isConnected ? "connected" : "disconnected"}</p>
       <p>EC: {sensorECData}</p>
       <p>PH: {sensorPHData}</p>
-      <p>Temperatura: 25 </p>
+      <p>Temperatura: {sensorTemperaturaData} </p>
     </div>
   );
 }
