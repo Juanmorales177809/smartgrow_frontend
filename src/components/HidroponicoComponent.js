@@ -8,6 +8,8 @@ function HidroponicoComponent() {
   const [sensorECData, setSensorECData] = useState();
   const [sensorPHData, setSensorPHData] = useState();
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [buttonColor, setButtonColor] = useState("red");
+
   useEffect(() => {
     socket.on("connect", () => {
       setIsConnected(socket.connected);
@@ -26,6 +28,22 @@ function HidroponicoComponent() {
     });
   }, []);
 
+  const toogleRele = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/rele");
+      const data = await response.json();
+      console.log(data);
+      if (data.rele1_pin1 === 1) {
+        setButtonColor("green");
+      }
+      if (data.rele1_pin1 === 0) {
+        setButtonColor("red");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <h2>Hidropónico</h2>
@@ -33,6 +51,9 @@ function HidroponicoComponent() {
       <p>EC: {sensorECData}</p>
       <p>PH: {sensorPHData}</p>
       <p>Temperatura: {sensorTemperaturaData} </p>
+      <button style={{ backgroundColor: buttonColor }} onClick={toogleRele}>
+        Rele
+      </button>
     </div>
   );
 }
