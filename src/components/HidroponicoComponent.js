@@ -92,14 +92,14 @@ function HidroponicoComponent() {
       <label for="setpoint1">EC:</label>
       <div class="input-button-container">
         <input type="text" id="setpoint1" placeholder="Ingrese un valor" />
-        <button class="setpoint-button onClick={sendStEc}">Enviar</button>
+        <button class="setpoint-button" onClick={sendStEc}>Enviar</button>
       </div>
     </div>
     <div class="setpoint">
       <label for="setpoint2">PH:</label>
       <div class="input-button-container">
         <input type="text" id="setpoint2" placeholder="Ingrese un valor" />
-        <button class="setpoint-button onClick={sendStPh}">Enviar</button>
+        <button class="setpoint-button" onClick={sendStPh}>Enviar</button>
       </div>
     </div>
     <div class="setpoint">
