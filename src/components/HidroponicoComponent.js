@@ -99,8 +99,8 @@ function HidroponicoComponent() {
   };
   
   return (
-  <div class="container">
-    <div class="content-hidro">
+  <div className="container">
+    <div className="content-hidro">
       <h2>Hidropónico</h2>
       <p>status: {isConnected ? "connected" : "disconnected"}</p>
       <p>EC: {sensorECData}</p>
@@ -117,27 +117,27 @@ function HidroponicoComponent() {
         Rele 3 
       </button>
     </div>
-    <div class="setpoints-section">
+    <div className="setpoints-section">
     <h2>Setpoints</h2>
-    <div class="setpoint">
-      <label for="setpoint1">EC: {setpointEcAux}</label>
-      <div class="input-button-container">
+    <div className="setpoint">
+      <label htmlFor="setpoint1">EC: {setpointEcAux}</label>
+      <div className="input-button-container">
         <input type="text" id="setpoint1" placeholder="Ingrese un valor" value={setpointEc} onChange={(e) => setSetpointEc(e.target.value)}/>
-        <button class="setpoint-button" onClick={sendStEc}>Enviar</button>
+        <button className="setpoint-button" onClick={sendStEc}>Enviar</button>
       </div>
     </div>
-    <div class="setpoint">
-      <label for="setpoint2">PH: {setpointPhAux}</label>
-      <div class="input-button-container">
+    <div className="setpoint">
+      <label htmlFor="setpoint2">PH: {setpointPhAux}</label>
+      <div className="input-button-container">
         <input type="text" id="setpoint2" placeholder="Ingrese un valor" value={setpointPh} onChange={(e) => setSetpointPh(e.target.value)} />
-        <button class="setpoint-button" onClick={sendStPh}>Enviar</button>
+        <button className="setpoint-button" onClick={sendStPh}>Enviar</button>
       </div>
     </div>
-    <div class="setpoint">
-      <label for="setpoint3">Temperatura: {setpointTemperaturaAux}</label>
-      <div class="input-button-container">
+    <div className="setpoint">
+      <label htmlFor="setpoint3">Temperatura: {setpointTemperaturaAux}</label>
+      <div className="input-button-container">
         <input type="text" id="setpoint3" placeholder="Ingrese un valor" value={setpointTemperatura} onChange = {(e) => setSetpointTemperatura(e.target.value)}/>
-        <button class="setpoint-button" onClick={sendStTemperatura}>Enviar</button>
+        <button className="setpoint-button" onClick={sendStTemperatura}>Enviar</button>
       </div>
     </div>
   </div>
