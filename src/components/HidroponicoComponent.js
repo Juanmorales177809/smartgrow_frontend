@@ -9,7 +9,15 @@ function HidroponicoComponent() {
   const [sensorECData, setSensorECData] = useState();
   const [sensorPHData, setSensorPHData] = useState();
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [buttonColor, setButtonColor] = useState("red");
+  const [buttonColor1, setButtonColor1] = useState("red");
+  const [buttonColor2, setButtonColor2] = useState("red");
+  const [buttonColor3, setButtonColor3] = useState("red");
+  const [setpointEc, setSetpointEc] = useState("");
+  const [setpointEcAux, setSetpointEcAux] = useState("");
+  const [setpointPh, setSetpointPh] = useState("");
+  const [setpointPhAux, setSetpointPhAux] = useState("");
+  const [setpointTemperatura, setSetpointTemperatura] = useState("");
+  const [setpointTemperaturaAux, setSetpointTemperaturaAux] = useState("");
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -20,24 +28,36 @@ function HidroponicoComponent() {
     });
     socket.on('message', (data) => {
       console.log(data);
-      if (data.sensor === 'hidroponico'){
-        setSensorTemperaturaData(data.temperatura);
-        setSensorECData(data.ec);
-        setSensorPHData(data.ph);
-      } 
+      if (data.Sensor === 'hidroponico'){
+        setSensorTemperaturaData(data.temperatura_agua1);
+        // setSensorECData(data.ec);
+        // setSensorPHData(data.ph);
+      }
     });
   }, []);
 
-  const toogleRele = async () => {
+  const toogleRele = async ( rele ) => {
     try {
-      const response = await fetch("http://localhost:8000/rele");
+      const response = await fetch(`http://localhost:8000/rele?rele=${rele}`);
       const data = await response.json();
       console.log(data);
       if (data.rele1_pin1 === 1) {
-        setButtonColor("green");
+        setButtonColor1("green");
       }
       if (data.rele1_pin1 === 0) {
-        setButtonColor("red");
+        setButtonColor1("red");
+      }
+      if (data.rele1_pin2 === 1) {
+        setButtonColor2("green");
+      }
+      if (data.rele1_pin2 === 0) {
+        setButtonColor2("red");
+      }
+      if (data.rele2_pin1 === 1) {
+        setButtonColor3("green");
+      }
+      if (data.rele2_pin1 === 0) {
+        setButtonColor3("red");
       }
     } catch (error) {
       console.log(error);
@@ -45,18 +65,21 @@ function HidroponicoComponent() {
   };
 
   const sendStEc = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/st_hidroponic_ec");
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+    setSetpointEcAux(setpointEc);
+    console.log(`http://localhost:8000/st_hidroponic_ec/${setpointEc}`);
+    // try {
+    //   const response = await fetch(`http://localhost:8000/st_hidroponic_ec/${setpointEc}`);
+    //   const data = await response.json();
+    //   console.log(data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const sendStPh = async () => {
     try {
-      const response = await fetch("http://localhost:8000/st_hidroponic_ph");
+      setSetpointPhAux(setpointPh);
+      const response = await fetch(`http://localhost:8000/st_hidroponic_ph/${setpointPh}`);
       const data = await response.json();
       console.log(data);
     } catch (error) {
@@ -66,7 +89,8 @@ function HidroponicoComponent() {
 
   const sendStTemperatura = async () => {
     try {
-      const response = await fetch("http://localhost:8000/st_hidroponic_temperatura");
+      setSetpointTemperaturaAux(setpointTemperatura);
+      const response = await fetch(`http://localhost:8000/st_hidroponic_temperatura/${setpointTemperatura}`);
       const data = await response.json();
       console.log(data);
     } catch (error) {
@@ -82,30 +106,37 @@ function HidroponicoComponent() {
       <p>EC: {sensorECData}</p>
       <p>PH: {sensorPHData}</p>
       <p>Temperatura: {sensorTemperaturaData}</p>
-      <button style={{ backgroundColor: buttonColor }} onClick={toogleRele}>
-        Rele
+      
+      <button style={{ backgroundColor: buttonColor1 }} onClick={() => toogleRele("rele1_pin1")}>
+        Rele 1 
+      </button>
+      <button style={{ backgroundColor: buttonColor2 }} onClick={() => toogleRele("rele1_pin2")}>
+        Rele 2
+      </button>
+      <button style={{ backgroundColor: buttonColor3 }} onClick={() => toogleRele("rele2_pin1")}>
+        Rele 3 
       </button>
     </div>
     <div class="setpoints-section">
     <h2>Setpoints</h2>
     <div class="setpoint">
-      <label for="setpoint1">EC:</label>
+      <label for="setpoint1">EC: {setpointEcAux}</label>
       <div class="input-button-container">
-        <input type="text" id="setpoint1" placeholder="Ingrese un valor" />
+        <input type="text" id="setpoint1" placeholder="Ingrese un valor" value={setpointEc} onChange={(e) => setSetpointEc(e.target.value)}/>
         <button class="setpoint-button" onClick={sendStEc}>Enviar</button>
       </div>
     </div>
     <div class="setpoint">
-      <label for="setpoint2">PH:</label>
+      <label for="setpoint2">PH: {setpointPhAux}</label>
       <div class="input-button-container">
-        <input type="text" id="setpoint2" placeholder="Ingrese un valor" />
+        <input type="text" id="setpoint2" placeholder="Ingrese un valor" value={setpointPh} onChange={(e) => setSetpointPh(e.target.value)} />
         <button class="setpoint-button" onClick={sendStPh}>Enviar</button>
       </div>
     </div>
     <div class="setpoint">
-      <label for="setpoint3">Temperatura:</label>
+      <label for="setpoint3">Temperatura: {setpointTemperaturaAux}</label>
       <div class="input-button-container">
-        <input type="text" id="setpoint3" placeholder="Ingrese un valor" />
+        <input type="text" id="setpoint3" placeholder="Ingrese un valor" value={setpointTemperatura} onChange = {(e) => setSetpointTemperatura(e.target.value)}/>
         <button class="setpoint-button" onClick={sendStTemperatura}>Enviar</button>
       </div>
     </div>

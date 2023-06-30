@@ -17,7 +17,7 @@ function SensoresComponent() {
     });
     socket.on('message', (data) => {
       console.log(data);
-      if (data.sensor === 'scd40'){
+      if (data.Sensor === 'scd40'){
         setSensorTemperaturaData(data.temperatura);
         setSensorHumedadData(data.humedad);
         setSensorCO2Data(data.Co2);
