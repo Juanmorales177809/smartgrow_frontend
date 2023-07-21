@@ -18,6 +18,7 @@ function HidroponicoComponent() {
   const [setpointPhAux, setSetpointPhAux] = useState("");
   const [setpointTemperatura, setSetpointTemperatura] = useState("");
   const [setpointTemperaturaAux, setSetpointTemperaturaAux] = useState("");
+  const [tiempoRecirculacion, setTiempoRecirculacion] = useState("");
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -38,27 +39,49 @@ function HidroponicoComponent() {
 
   const toogleRele = async ( rele ) => {
     try {
-      const response = await fetch(`http://localhost:8000/rele?rele=${rele}`);
+      if(tiempoRecirculacion === ""){
+        setTiempoRecirculacion(10000);
+      }
+      const response = await fetch(`http://localhost:8000/api/v1/rele?rele=${rele}&tiempo_recirculacion=${tiempoRecirculacion}`);
       const data = await response.json();
       console.log(data);
-      if (data.rele1_pin1 === 1) {
-        setButtonColor1("green");
+      if(data.rele === "entrada_de_agua"){
+        if(buttonColor1 === "red"){
+          setButtonColor1("green");
+        }else{
+          setButtonColor1("red");
+        }
+      } else if(data.rele === "desague_hidroponico"){
+        if(buttonColor2 === "red"){
+          setButtonColor2("green");
+        }else{
+          setButtonColor2("red");
+        }
+      } else if(data.rele === "recirculacion_hidroponico"){
+        if(buttonColor3 === "red"){
+          setButtonColor3("green");
+        }else{
+          setButtonColor3("red");
+        }
       }
-      if (data.rele1_pin1 === 0) {
-        setButtonColor1("red");
-      }
-      if (data.rele1_pin2 === 1) {
-        setButtonColor2("green");
-      }
-      if (data.rele1_pin2 === 0) {
-        setButtonColor2("red");
-      }
-      if (data.rele2_pin1 === 1) {
-        setButtonColor3("green");
-      }
-      if (data.rele2_pin1 === 0) {
-        setButtonColor3("red");
-      }
+      // if (data.rele1_pin1 === 1) {
+      //   setButtonColor1("green");
+      // }
+      // if (data.rele1_pin1 === 0) {
+      //   setButtonColor1("red");
+      // }
+      // if (data.rele1_pin2 === 1) {
+      //   setButtonColor2("green");
+      // }
+      // if (data.rele1_pin2 === 0) {
+      //   setButtonColor2("red");
+      // }
+      // if (data.rele2_pin1 === 1) {
+      //   setButtonColor3("green");
+      // }
+      // if (data.rele2_pin1 === 0) {
+      //   setButtonColor3("red");
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -107,15 +130,19 @@ function HidroponicoComponent() {
       <p>PH: {sensorPHData}</p>
       <p>Temperatura: {sensorTemperaturaData}</p>
       
-      <button style={{ backgroundColor: buttonColor1 }} onClick={() => toogleRele("rele1_pin1")}>
-        Rele 1 
+      <button style={{ backgroundColor: buttonColor1 }} onClick={() => toogleRele("entrada_de_agua_hidroponico")}>
+        Entrada 
       </button>
-      <button style={{ backgroundColor: buttonColor2 }} onClick={() => toogleRele("rele1_pin2")}>
-        Rele 2
+      <button style={{ backgroundColor: buttonColor2 }} onClick={() => toogleRele("desague_hidroponico")}>
+        Salida
       </button>
-      <button style={{ backgroundColor: buttonColor3 }} onClick={() => toogleRele("rele2_pin1")}>
-        Rele 3 
+      <button style={{ backgroundColor: buttonColor3 }} onClick={() => toogleRele("recirculacion_hidroponico")}>
+        Recirculacion 
       </button>
+      <div className="tiempo-recirculacion">
+        <label> Tiempo de recirculacion (ms) </label>
+        <input type="text" id="tiempoRecirculacion" placeholder="Ingrese un valor" value={tiempoRecirculacion} onChange={(e) => setTiempoRecirculacion(e.target.value)} />
+      </div>
     </div>
     <div className="setpoints-section">
     <h2>Setpoints</h2>
